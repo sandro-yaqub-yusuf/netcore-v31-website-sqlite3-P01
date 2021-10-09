@@ -1,0 +1,58 @@
+@{
+    var campoSort = "&sortField=*&currentSortField=" + ViewBag.Paginacao.SortField;
+    var ordemSort = "&currentSortOrder=" + ViewBag.Paginacao.SortOrder;
+    var filtro    = "&currentFilter=" + @ViewBag.Paginacao.Filter;
+    var limiteNav = 0;
+
+    if (ViewBag.Paginacao.CurrentPage <= 0) ViewBag.Paginacao.CurrentPage = 1;
+
+    var linkPrimeiraPag = "/produtos/lista?page=1" + campoSort + ordemSort + filtro;
+    var linkUltimaPag = "/produtos/lista?page=" + ViewBag.Paginacao.TotalPages + campoSort + ordemSort + filtro;
+    var linkAnteriorPag = "/produtos/lista?page=" + (ViewBag.Paginacao.CurrentPage - 1) + campoSort + ordemSort + filtro;
+    var linkProximaPag = "/produtos/lista?page=" + (ViewBag.Paginacao.CurrentPage + 1) + campoSort + ordemSort + filtro;
+    var linkAtualPagina = "";
+
+    <nav aria-label="...">
+        <ul class="pagination">
+            <li class="page-item @(ViewBag.Paginacao.CurrentPage > 1 ? "" : "disabled")">
+                <a class="page-link" href="@linkPrimeiraPag"><i class="fas fa-fast-backward"></i></a>
+            </li>
+            <li class="page-item @(ViewBag.Paginacao.HasPrevious ? "" : "disabled")">
+                <a class="page-link" href="@linkAnteriorPag"><i class="fas fa-step-backward"></i></a>
+            </li>
+
+            @if (ViewBag.Paginacao.CurrentPage < ViewBag.Paginacao.TotalPages)
+            {
+                limiteNav = ((ViewBag.Paginacao.TotalPages - ViewBag.Paginacao.CurrentPage) > 4 ? 4 : (ViewBag.Paginacao.TotalPages - ViewBag.Paginacao.CurrentPage));
+
+                for (var i = ViewBag.Paginacao.CurrentPage; i <= (ViewBag.Paginacao.CurrentPage + limiteNav); i++)
+                {
+                    linkAtualPagina = "/produtos/lista?page=" + i + campoSort + ordemSort + filtro;
+
+                    <li class="page-item @(ViewBag.Paginacao.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="@linkAtualPagina">@i</a>
+                    </li>
+                }
+
+                if ((ViewBag.Paginacao.TotalPages - ViewBag.Paginacao.CurrentPage) >= 5)
+                {
+                    linkAtualPagina = "/produtos/lista?page=" + ViewBag.Paginacao.TotalPages + campoSort + ordemSort + filtro;
+
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="@linkAtualPagina">@ViewBag.Paginacao.TotalPages</a>
+                    </li>
+                }
+            }
+
+            <li class="page-item @(ViewBag.Paginacao.HasNext ? "" : "disabled")">
+                <a class="page-link" href="@linkProximaPag"><i class="fas fa-step-forward"></i></a>
+            </li>
+            <li class="page-item @(ViewBag.Paginacao.CurrentPage < ViewBag.Paginacao.TotalPages ? "" : "disabled")">
+                <a class="page-link" href="@linkUltimaPag"><i class="fas fa-fast-forward"></i></a>
+            </li>
+        </ul>
+    </nav>
+}

@@ -1,0 +1,83 @@
+@using KITAB.CRUD.Products.Web.Extensions
+@model IEnumerable<KITAB.CRUD.Products.Web.ViewModels.ProdutoViewModel>
+
+<div class="col-md-12" style="margin-top: 10px;">
+    <form class="form-horizontal" method="get" asp-controller="Produtos" asp-action="Index">
+        <div class="form-group row">
+            <div class="col-sm-1" style="margin-bottom: 10px;">
+                <label for="Produto" class="col-form-label">Produto:</label>
+            </div>
+            <div class="col-sm-3" style="margin-bottom: 10px;">
+                <input type="text" name="filter" style="width: 250px;">
+            </div>
+            <div class="col-sm-2" style="margin-bottom: 10px;">
+                <input class="btn btn-secondary" type="submit" value="PESQUISAR">
+            </div>
+            <div class="col-sm-2" style="margin-bottom: 10px;">
+                <a class="btn btn-secondary" asp-controller="Produtos" asp-action="Index">LISTAR TODOS</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="col-md-12 table-responsive p-0">
+    <table class="table table-hover table-striped text-nowrap">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.ActionLink("Id", "Index", "Produtos", new { sortField = "Id", currentSortField = ViewBag.Paginacao.SortField, currentSortOrder = ViewBag.Paginacao.SortOrder, currentFilter = ViewBag.Paginacao.Filter })
+                </th>
+                <th>
+                    @Html.ActionLink("Produto", "Index", "Produtos", new { sortField = "Nome", currentSortField = ViewBag.Paginacao.SortField, currentSortOrder = ViewBag.Paginacao.SortOrder, currentFilter = ViewBag.Paginacao.Filter })
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Qtde)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrecoCusto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrecoVenda)
+                </th>
+                <th>
+                    @Html.ActionLink("Situação", "Index", "Produtos", new { sortField = "Situacao", currentSortField = ViewBag.Paginacao.SortField, currentSortOrder = ViewBag.Paginacao.SortOrder, currentFilter = ViewBag.Paginacao.Filter })
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        @item.Qtde
+                    </td>
+                    <td>
+                        @item.PrecoCusto.ToString("C")
+                    </td>
+                    <td>
+                        @item.PrecoVenda.ToString("C")
+                    </td>
+                    <td>
+                        @this.FormataSituacao(item.Situacao)
+                    </td>
+                    <td class="text-right">
+                        <a class="btn btn-warning" asp-controller="Produtos" asp-action="Consultar" asp-route-id="@item.Id"><span class="fa fa-search"></span></a>
+                        <a class="btn btn-info" asp-controller="Produtos" asp-action="Alterar" asp-route-id="@item.Id"><span class="fa fa-pencil-alt"></span></a>
+                        <a class="btn btn-danger" asp-controller="Produtos" asp-action="Excluir" asp-route-id="@item.Id"><span class="fa fa-trash"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="col-md-12" style="margin-top: 20px;">
+    @await Component.InvokeAsync("Pagination")
+</div>
